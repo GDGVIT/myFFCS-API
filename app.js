@@ -17,9 +17,11 @@ mongoose.connection.once('open', () => {
 
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/user');
+const classRoomRoutes = require('./routes/classRoom');
 
 app.use('/', indexRoutes);
 app.use('/user', userRoutes);
+app.use('/classroom', classRoomRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log('myFFCS Server API Started');
