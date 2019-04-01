@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const ffcsData = require('../data/all_data.json');
 
-router.get('/searchbyfaculty/:keyword', (req, res) => {
+const getClassRooms = (res, searchField, searchKeyword) => {
 
-    const keyword = req.params.keyword.toLowerCase();
+    const keyword = searchKeyword.trim().toLowerCase();
 
     try {
         const filteredData = ffcsData.filter((classRoom) => {
-            return classRoom.FACULTY.toLowerCase().indexOf(keyword) >= 0 ? true: false;
+            return classRoom[searchField].toLowerCase().indexOf(keyword) >= 0 ? true: false;
         });
 
         return res.status(200).json(filteredData);
@@ -16,41 +16,18 @@ router.get('/searchbyfaculty/:keyword', (req, res) => {
         console.log(error);
         return res.status(500).send('Error');
     }
+}
 
+router.get('/searchbyfaculty/:keyword', (req, res) => {
+    return getClassRooms(res, 'FACULTY', req.params.keyword);
 });
 
 router.get('/searchbycoursename/:keyword', (req, res) => {
-
-    const keyword = req.params.keyword.toLowerCase();
-
-    try {
-        const filteredData = ffcsData.filter((classRoom) => {
-            return classRoom.TITLE.toLowerCase().indexOf(keyword) >= 0 ? true: false;
-        });
-
-        return res.status(200).json(filteredData);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send('Error');
-    }
-
+    return getClassRooms(res, 'TITLE', req.params.keyword);
 });
 
 router.get('/searchbycoursecode/:keyword', (req, res) => {
-
-    const keyword = req.params.keyword.toLowerCase();
-
-    try {
-        const filteredData = ffcsData.filter((classRoom) => {
-            return classRoom.CODE.toLowerCase().indexOf(keyword) >= 0 ? true: false;
-        });
-
-        return res.status(200).json(filteredData);
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send('Error');
-    }
-
+    return getClassRooms(res, 'CODE', req.params.keyword);
 });
 
 router.get('/:classRoomId', (req, res) => {
@@ -63,7 +40,5 @@ router.get('/:classRoomId', (req, res) => {
     }
 
 });
-
-
 
 module.exports = router;
