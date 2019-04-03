@@ -7,9 +7,13 @@ const getClassRooms = (res, searchField, searchKeyword) => {
     const keyword = searchKeyword.trim().toLowerCase();
 
     try {
-        const filteredData = ffcsData.filter((classRoom) => {
-            return classRoom[searchField].toLowerCase().indexOf(keyword) >= 0 ? true: false;
-        });
+        const filteredData = [];
+
+        for(let i=0; i<ffcsData.length; i++){
+            if(ffcsData[i][searchField].toLowerCase().indexOf(keyword) >= 0){
+                filteredData.push(Object.assign({}, ffcsData[i], {id: i}));
+            }
+        }
 
         return res.status(200).json(filteredData);
     } catch (error) {
@@ -18,7 +22,7 @@ const getClassRooms = (res, searchField, searchKeyword) => {
     }
 }
 
-router.get('/searchbyfaculty/:keyword', (req, res) => {
+router.get('/searchbyfaculty/:keyword/', (req, res) => {
     return getClassRooms(res, 'FACULTY', req.params.keyword);
 });
 
