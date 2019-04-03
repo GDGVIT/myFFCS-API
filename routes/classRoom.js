@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const ffcsData = require('../data/all_data.json');
 
-const getClassRooms = (res, searchField, searchKeyword) => {
+router.get('/search/:type/:keyword', (req, res) => {
 
-    const keyword = searchKeyword.trim().toLowerCase();
+    const searchField = req.params.type.toUpperCase();
+    const keyword = req.params.keyword.trim().toLowerCase();
 
     try {
         const filteredData = [];
@@ -20,18 +21,7 @@ const getClassRooms = (res, searchField, searchKeyword) => {
         console.log(error);
         return res.status(500).send('Error');
     }
-}
-
-router.get('/searchbyfaculty/:keyword/', (req, res) => {
-    return getClassRooms(res, 'FACULTY', req.params.keyword);
-});
-
-router.get('/searchbycoursename/:keyword', (req, res) => {
-    return getClassRooms(res, 'TITLE', req.params.keyword);
-});
-
-router.get('/searchbycoursecode/:keyword', (req, res) => {
-    return getClassRooms(res, 'CODE', req.params.keyword);
+    
 });
 
 router.get('/:classRoomId', (req, res) => {
