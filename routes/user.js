@@ -9,7 +9,7 @@ router.post('/add', async (req, res) => {
             const newUser = new UserModel({
                 _id: req.body.uid,
                 userName: req.body.userName,
-                timetables: [[]]
+                timetables: []
             });
             await newUser.save();
             return res.status(200).send('User Created');
@@ -37,6 +37,23 @@ router.get('/:id', async (req, res) => {
         return res.status(500).send('Error');
     }
 
-})
+});
+
+router.post('/:id/add-timetable', async (req, res) => {
+
+    try {
+        if(req.params.id && req.body.timetable){
+            await UserModel.findByIdAndUpdate(req.params.id, { $push: { timetables: { $each: [req.body.timetable] } } });
+            return res.status(200).send('Timetable Created');
+        }
+        else{
+            throw 'All fields are mandatory'
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send('Error');
+    }
+});
 
 module.exports = router;
