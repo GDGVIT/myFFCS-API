@@ -2,18 +2,29 @@ const express = require('express');
 const router = express.Router();
 const ffcsData = require('../data/all_data.json');
 
-router.get('/search/:type/:keyword', (req, res) => {
-
-    const searchField = req.params.type.toUpperCase();
-    const keyword = req.params.keyword.trim().toLowerCase();
+router.get('/search', (req, res) => {
 
     try {
         const filteredData = [];
+        const searchQueries = req.query;
 
-        for(let i=0; i<ffcsData.length; i++){
-            if(ffcsData[i][searchField].toLowerCase().indexOf(keyword) >= 0){
-                filteredData.push(Object.assign({}, ffcsData[i], {id: i}));
+        for (let i = 0; i < ffcsData.length; i++) {
+            let flag = true;
+            for (let searchField in searchQueries) {
+                if (searchQueries.hasOwnProperty(searchField)) {
+                    if (ffcsData[i][searchField.toUpperCase()].toLowerCase().indexOf(searchQueries[searchField].trim().toLowerCase()) < 0) {
+                        flag = false;
+                        break;
+                    }
+                }
             }
+
+            if(flag){
+                filteredData.push(Object.assign({}, ffcsData[i], {
+                    id: i
+                }));
+            }
+
         }
 
         return res.status(200).json(filteredData);
@@ -21,7 +32,7 @@ router.get('/search/:type/:keyword', (req, res) => {
         console.log(error);
         return res.status(500).send('Error');
     }
-    
+
 });
 
 router.get('/:classRoomId', (req, res) => {
