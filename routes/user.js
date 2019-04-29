@@ -39,12 +39,12 @@ router.get('/:id', async (req, res) => {
 
 });
 
-router.post('/:id/add-timetable', async (req, res) => {
+router.post('/:id/timetable', async (req, res) => {
 
     try {
         if(req.params.id && req.body.timetable){
-            await UserModel.findByIdAndUpdate(req.params.id, { $push: { timetables: { $each: [req.body.timetable] } } });
-            return res.status(200).send('Timetable Created');
+            await UserModel.findByIdAndUpdate(req.params.id, { timetable: req.body.timetable });
+            return res.status(200).send('Timetable Created/Updated');
         }
         else{
             throw 'All fields are mandatory'
@@ -54,6 +54,7 @@ router.post('/:id/add-timetable', async (req, res) => {
         console.log(error);
         return res.status(500).send('Error');
     }
+
 });
 
 module.exports = router;

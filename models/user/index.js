@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
     _id: String,
     userName: String,
-    timetables: [[Number]],
+    timetable: [Number],
     createdAt: { type: Date, default: Date.now },
     lastUpdatedAt: { type: Date, default: Date.now }
 });
