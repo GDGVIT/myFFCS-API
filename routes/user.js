@@ -9,7 +9,7 @@ router.post('/add', async (req, res) => {
             const newUser = new UserModel({
                 _id: req.body.uid,
                 userName: req.body.userName,
-                timetables: []
+                timetable: []
             });
             await newUser.save();
             return res.status(200).send('User Created');
